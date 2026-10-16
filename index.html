@@ -2,946 +2,882 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Science Olympiad AI Lab</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Science Olympiad AI Lab</title>
 
-  <style>
-    :root {
-      --bg: #eef2f6;
-      --panel: #ffffff;
-      --border: #d5dee6;
-      --text: #182633;
-      --muted: #647585;
-      --accent: #246b8f;
-      --soft: #eaf4f8;
-      --shadow: 0 8px 24px rgba(20, 40, 55, .09);
-    }
+<style>
+:root {
+  --bg: #eef2f6;
+  --panel: #fff;
+  --border: #d5dee6;
+  --text: #182633;
+  --muted: #647585;
+  --accent: #246b8f;
+  --soft: #eaf4f8;
+  --shadow: 0 8px 24px rgba(20,40,55,.08);
+}
 
-    * { box-sizing: border-box; }
+* { box-sizing: border-box; }
 
-    body {
-      margin: 0;
-      background: var(--bg);
-      color: var(--text);
-      font-family: Arial, Helvetica, sans-serif;
-    }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: Arial, Helvetica, sans-serif;
+}
 
-    .page {
-      max-width: 1450px;
-      width: calc(100% - 32px);
-      margin: 24px auto;
-    }
+.page {
+  width: calc(100% - 32px);
+  max-width: 1450px;
+  margin: 24px auto;
+}
 
-    .science-header {
-      position: relative;
-      overflow: hidden;
-      padding: 25px;
-      margin-bottom: 20px;
-      background: var(--panel);
-      border: 1px solid var(--border);
-      border-radius: 18px;
-      box-shadow: var(--shadow);
-    }
+header.science-header {
+  padding: 25px;
+  margin-bottom: 20px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  box-shadow: var(--shadow);
+}
 
-    .kicker {
-      margin: 0 0 7px;
-      color: var(--accent);
-      font-size: 12px;
-      font-weight: 800;
-      letter-spacing: 2px;
-    }
+.kicker {
+  margin: 0 0 7px;
+  color: var(--accent);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 2px;
+}
 
-    h1 {
-      margin: 0;
-      font-size: clamp(27px, 4vw, 43px);
-    }
+h1 {
+  margin: 0;
+  font-size: clamp(28px, 4vw, 43px);
+}
 
-    .subtitle {
-      max-width: 650px;
-      margin: 10px 0 0;
-      color: var(--muted);
-      line-height: 1.5;
-    }
+.subtitle {
+  max-width: 650px;
+  color: var(--muted);
+  line-height: 1.6;
+}
 
-    .equations {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 9px;
-      margin-top: 19px;
-    }
+.equations {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+  margin-top: 18px;
+}
 
-    .equations span {
-      padding: 9px 13px;
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      background: #f8fafc;
-      font-family: Georgia, serif;
-      font-size: 17px;
-    }
+.equations span {
+  padding: 9px 13px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: #f8fafc;
+  font: 17px Georgia, serif;
+}
 
-    .counter {
-      position: absolute;
-      top: 18px;
-      right: 20px;
-      padding: 9px 12px;
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      background: white;
-      color: var(--muted);
-      font-size: 13px;
-    }
+.counter {
+  margin-top: 16px;
+  color: var(--muted);
+  font-size: 13px;
+}
 
-    .counter strong { color: var(--accent); }
+.counter strong { color: var(--accent); }
 
-    .workspace {
-      display: grid;
-      grid-template-columns: 310px minmax(0, 1fr);
-      align-items: start;
-      gap: 20px;
-    }
+.workspace {
+  display: grid;
+  grid-template-columns: 310px minmax(0, 1fr);
+  align-items: start;
+  gap: 20px;
+}
 
-    .sidebar {
-      display: flex;
-      flex-direction: column;
-      gap: 15px;
-      min-width: 0;
-    }
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  min-width: 0;
+}
 
-    .sidebar-card,
-    .agent-card {
-      overflow: hidden;
-      background: var(--panel);
-      border: 1px solid var(--border);
-      border-radius: 17px;
-      box-shadow: var(--shadow);
-    }
+.sidebar-card, .agent-card {
+  overflow: hidden;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 17px;
+  box-shadow: var(--shadow);
+}
 
-    .toggle {
-      display: flex;
-      width: 100%;
-      justify-content: space-between;
-      align-items: center;
-      gap: 12px;
-      padding: 17px;
-      border: 0;
-      border-bottom: 1px solid var(--border);
-      background: white;
-      color: var(--text);
-      text-align: left;
-      font-size: 15px;
-      font-weight: 750;
-      cursor: pointer;
-    }
+.toggle {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+  padding: 17px;
+  border: 0;
+  border-bottom: 1px solid var(--border);
+  background: white;
+  color: var(--text);
+  font-weight: 750;
+  text-align: left;
+  cursor: pointer;
+}
 
-    .toggle:hover { background: #f7fafc; }
+.toggle:hover { background: #f7fafc; }
 
-    .chevron {
-      color: var(--muted);
-      transition: transform .2s;
-    }
+.chevron { color: var(--muted); }
 
-    .toggle[aria-expanded="false"] .chevron {
-      transform: rotate(-90deg);
-    }
+.toggle[aria-expanded="false"] .chevron {
+  transform: rotate(-90deg);
+}
 
-    .section-body {
-      display: grid;
-      gap: 10px;
-      padding: 13px;
-    }
+.section-body {
+  display: grid;
+  gap: 10px;
+  padding: 13px;
+}
 
-    .section-body.collapsed { display: none; }
+.section-body.collapsed { display: none; }
 
-    .article-card {
-      position: relative;
-      padding: 13px;
-      padding-right: 48px;
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      background: #fbfcfd;
-      transition: .2s;
-    }
+.article-card {
+  position: relative;
+  padding: 13px 45px 13px 13px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: #fbfcfd;
+}
 
-    .article-card:hover {
-      border-color: #9bbccc;
-      background: var(--soft);
-    }
+.article-card.starred {
+  border-color: #d5b34c;
+  background: #fffdf3;
+}
 
-    .article-card.starred {
-      border-color: #d5b34c;
-      background: #fffdf3;
-    }
+.article-source {
+  margin-bottom: 6px;
+  color: var(--accent);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1px;
+}
 
-    .article-source {
-      margin-bottom: 6px;
-      color: var(--accent);
-      font-size: 10px;
-      font-weight: 800;
-      letter-spacing: 1px;
-    }
+.article-card h3 {
+  margin: 0 0 7px;
+  font-size: 14px;
+  line-height: 1.4;
+}
 
-    .article-card h3 {
-      margin: 0 0 7px;
-      font-size: 14px;
-      line-height: 1.4;
-    }
+.article-card p {
+  margin: 0 0 10px;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.5;
+}
 
-    .article-card p {
-      margin: 0 0 10px;
-      color: var(--muted);
-      font-size: 12px;
-      line-height: 1.5;
-    }
+.article-card a {
+  color: var(--accent);
+  font-size: 12px;
+  font-weight: 700;
+  text-decoration: none;
+}
 
-    .article-card a {
-      color: var(--accent);
-      font-size: 12px;
-      font-weight: 700;
-      text-decoration: none;
-    }
+.article-card a:hover { text-decoration: underline; }
 
-    .article-card a:hover { text-decoration: underline; }
+.star-button {
+  position: absolute;
+  top: 9px;
+  right: 9px;
+  width: 30px;
+  height: 30px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: white;
+  color: #a5aeb6;
+  font-size: 19px;
+  cursor: pointer;
+}
 
-    .star-button {
-      position: absolute;
-      top: 9px;
-      right: 9px;
-      width: 30px;
-      height: 30px;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      background: white;
-      color: #a5aeb6;
-      font-size: 19px;
-      cursor: pointer;
-    }
+.star-button.active { color: #c38e10; }
 
-    .star-button.active { color: #c38e10; }
+.event-group {
+  display: grid;
+  gap: 7px;
+}
 
-    .event-group {
-      display: grid;
-      gap: 7px;
-    }
+.event-group + .event-group {
+  margin-top: 7px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+}
 
-    .event-group + .event-group {
-      margin-top: 7px;
-      padding-top: 12px;
-      border-top: 1px solid var(--border);
-    }
+.event-heading {
+  margin: 0 0 3px;
+  color: var(--accent);
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
 
-    .event-heading {
-      margin: 0 0 3px;
-      color: var(--accent);
-      font-size: 12px;
-      font-weight: 800;
-      text-transform: uppercase;
-    }
+.event-button {
+  padding: 10px 11px;
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  background: #fbfcfd;
+  color: var(--text);
+  text-align: left;
+  font-size: 13px;
+  cursor: pointer;
+}
 
-    .event-button {
-      padding: 10px 11px;
-      border: 1px solid var(--border);
-      border-radius: 9px;
-      background: #fbfcfd;
-      color: var(--text);
-      text-align: left;
-      font-size: 13px;
-      cursor: pointer;
-    }
+.event-button:hover {
+  border-color: #9bbccc;
+  background: var(--soft);
+}
 
-    .event-button:hover {
-      border-color: #9bbccc;
-      background: var(--soft);
-    }
+.event-note, .footer-note {
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.6;
+}
 
-    .event-note {
-      margin: 0;
-      color: var(--muted);
-      font-size: 11px;
-      line-height: 1.5;
-    }
+.footer-note { padding: 14px; }
 
-    .agent-card {
-      display: flex;
-      flex-direction: column;
-      width: min(100%, 850px);
-      aspect-ratio: 1 / 1;
-      justify-self: center;
-      min-width: 0;
-    }
+.agent-card {
+  display: flex;
+  flex-direction: column;
+  width: min(100%, 850px);
+  aspect-ratio: 1 / 1;
+  justify-self: center;
+  min-width: 0;
+}
 
-    .agent-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 10px;
-      padding: 15px 18px;
-      border-bottom: 1px solid var(--border);
-      background: #fbfcfd;
-    }
+.agent-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  padding: 15px 18px;
+  border-bottom: 1px solid var(--border);
+  background: #fbfcfd;
+}
 
-    .agent-title {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 14px;
-      font-weight: 800;
-    }
+.agent-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  font-weight: 800;
+}
 
-    .status-dot {
-      width: 9px;
-      height: 9px;
-      border-radius: 50%;
-      background: #48a36b;
-    }
+.status-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #48a36b;
+}
 
-    .agent-status {
-      color: var(--muted);
-      font-size: 11px;
-    }
+.agent-status {
+  color: var(--muted);
+  font-size: 11px;
+}
 
-    #coze-chat-container {
-      position: relative;
-      flex: 1;
-      width: 100%;
-      min-height: 0;
-      overflow: auto;
-      background: #f6f8fa;
-    }
+/* Coze's embedded chat goes inside this element. */
+#coze-chat-container {
+  position: relative;
+  flex: 1;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+  background: #f6f8fa;
+}
 
-    .chat-message {
-      padding: 30px;
-      color: var(--muted);
-      text-align: center;
-      font-size: 14px;
-      line-height: 1.6;
-    }
+#coze-chat-container iframe {
+  max-width: 100%;
+}
 
-    .chat-message strong {
-      display: block;
-      margin-bottom: 8px;
-      color: var(--text);
-      font-size: 18px;
-    }
+.chat-message {
+  padding: 28px;
+  color: var(--muted);
+  text-align: center;
+  font-size: 14px;
+  line-height: 1.6;
+}
 
-    .footer-note {
-      padding: 13px;
-      color: var(--muted);
-      font-size: 12px;
-      line-height: 1.5;
-    }
+.chat-message strong {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--text);
+  font-size: 18px;
+}
 
-    @media (max-width: 900px) {
-      .workspace { grid-template-columns: 1fr; }
-      .agent-card {
-        order: -1;
-        width: min(100%, 700px);
-      }
-      .sidebar { order: 1; }
-    }
+@media (max-width: 900px) {
+  .workspace { grid-template-columns: 1fr; }
+  .agent-card {
+    order: -1;
+    width: min(100%, 700px);
+  }
+  .sidebar { order: 1; }
+}
 
-    @media (max-width: 560px) {
-      .page {
-        width: calc(100% - 18px);
-        margin: 10px auto;
-      }
+@media (max-width: 560px) {
+  .page {
+    width: calc(100% - 18px);
+    margin: 10px auto;
+  }
 
-      .science-header { padding: 18px; }
+  header.science-header { padding: 18px; }
 
-      .counter {
-        position: static;
-        display: inline-block;
-        margin-top: 15px;
-      }
+  .agent-card {
+    aspect-ratio: auto;
+    height: 72vh;
+    min-height: 500px;
+  }
 
-      .agent-card {
-        aspect-ratio: auto;
-        height: 72vh;
-        min-height: 500px;
-      }
-
-      .agent-status { display: none; }
-    }
-  </style>
+  .agent-status { display: none; }
+}
+</style>
 </head>
 
 <body>
-  <main class="page">
+<main class="page">
 
-    <header class="science-header">
-      <p class="kicker">SCIENCE LAB • AI ASSISTANT</p>
+  <header class="science-header">
+    <p class="kicker">SCIENCE LAB · AI ASSISTANT</p>
+    <h1>Explore. Ask. Discover.</h1>
+    <p class="subtitle">
+      Your Science Olympiad study space. Explore scientific research,
+      browse events, and ask your AI assistant questions.
+    </p>
 
-      <h1>Explore. Ask. Discover.</h1>
+    <div class="equations">
+      <span>E = mc²</span>
+      <span>F = ma</span>
+      <span>pV = nRT</span>
+      <span>H₂O</span>
+      <span>DNA</span>
+    </div>
 
-      <p class="subtitle">
-        Your Science Olympiad study space. Explore scientific research,
-        browse events, and ask your AI assistant questions.
-      </p>
+    <div class="counter">
+      Browser visits: <strong id="use-count">0</strong>
+    </div>
+  </header>
 
-      <div class="equations">
-        <span>E = mc²</span>
-        <span>F = ma</span>
-        <span>pV = nRT</span>
-        <span>H₂O</span>
-        <span>DNA</span>
-      </div>
+  <div class="workspace">
+    <aside class="sidebar">
 
-      <div class="counter">
-        Uses: <strong id="use-count">0</strong>
-      </div>
-    </header>
-
-    <div class="workspace">
-
-      <aside class="sidebar">
-
-        <section class="sidebar-card">
-          <button class="toggle" aria-expanded="true" type="button">
-            <span>🧪 Scientific Articles</span>
-            <span class="chevron">▼</span>
-          </button>
-
-          <div class="section-body" id="article-list"></div>
-        </section>
-
-        <section class="sidebar-card">
-          <button class="toggle" aria-expanded="true" type="button">
-            <span>🔬 Science Olympiad Events</span>
-            <span class="chevron">▼</span>
-          </button>
-
-          <div class="section-body" id="event-list"></div>
-        </section>
-
-        <section class="sidebar-card footer-note">
-          Star articles to keep them on your list. Click an event to open
-          its official event information and get a study prompt to use
-          with the AI assistant.
-          <br><br>
-          The event list is a starter list. Check the official Science
-          Olympiad rules for the current season before relying on it.
-        </section>
-
-      </aside>
-
-      <section class="agent-card">
-        <header class="agent-header">
-          <div class="agent-title">
-            <span class="status-dot"></span>
-            <span>Science AI Agent</span>
-          </div>
-          <span class="agent-status">Powered by Coze</span>
-        </header>
-
-        <div id="coze-chat-container">
-          <div class="chat-message">
-            <strong>Loading your AI assistant…</strong>
-            Please wait while the Coze chat loads.
-          </div>
-        </div>
+      <section class="sidebar-card">
+        <button class="toggle" aria-expanded="true" type="button">
+          <span>🧪 Scientific Articles</span>
+          <span class="chevron">▼</span>
+        </button>
+        <div class="section-body" id="article-list"></div>
       </section>
 
-    </div>
-  </main>
+      <section class="sidebar-card">
+        <button class="toggle" aria-expanded="true" type="button">
+          <span>🔬 Science Olympiad Events</span>
+          <span class="chevron">▼</span>
+        </button>
+        <div class="section-body" id="event-list"></div>
+      </section>
 
-  <!-- Coze Web Chat SDK -->
-  <script src="https://sf-cdn.coze.com/obj/unpkg-va/flow-platform/chat-app-sdk/1.2.0-beta.20/libs/oversea/index.js"></script>
+      <section class="sidebar-card footer-note">
+        <strong>Study tip</strong><br>
+        Star articles to keep them on your list. Open an event to create
+        a study prompt that you can copy into the AI assistant.
+        <br><br>
+        Check official Science Olympiad rules for the current season.
+        The sample events below are not a verified 2027 event slate.
+      </section>
 
-  <script>
-    "use strict";
+    </aside>
 
-    // ----------------------------------------------------
-    // 1. COZE CONFIGURATION
-    // ----------------------------------------------------
+    <section class="agent-card">
+      <header class="agent-header">
+        <div class="agent-title">
+          <span class="status-dot"></span>
+          <span>Science AI Agent</span>
+        </div>
+        <span class="agent-status">Powered by Coze</span>
+      </header>
 
-    const BOT_ID = "7689854988897550389";
+      <div id="coze-chat-container">
+        <div class="chat-message">
+          <strong>Loading your AI assistant…</strong>
+          Connecting to Coze. Please wait.
+        </div>
+      </div>
+    </section>
+  </div>
+</main>
 
-    // Replace this with your NEW working token.
-    // WARNING: Anyone can see a token included in public HTML.
-    // Use a secure backend for a publicly shared website.
-    const COZE_TOKEN = "PASTE_YOUR_NEW_TOKEN_HERE";
+<!-- Coze Chat SDK: international/oversea build -->
+<script
+  src="https://sf-cdn.coze.com/obj/unpkg-va/flow-platform/chat-app-sdk/1.2.0-beta.20/libs/oversea/index.js">
+</script>
 
-    function showChatError(title, message) {
-      const container = document.getElementById("coze-chat-container");
+<script>
+"use strict";
 
-      container.innerHTML = "";
+/* ======================================================
+   COZE AI AGENT
+   ====================================================== */
 
-      const box = document.createElement("div");
-      box.className = "chat-message";
+const BOT_ID = "7689854988897550389";
 
-      const heading = document.createElement("strong");
-      heading.textContent = title;
+/*
+  Enter your NEW token here to test.
 
-      const description = document.createElement("p");
-      description.textContent = message;
+  WARNING: A token in public HTML can be read by visitors.
+  For a public website, move token handling to a secure backend
+  before publishing.
+*/
+const COZE_TOKEN = "PASTE_YOUR_NEW_TOKEN_HERE";
 
-      box.append(heading, description);
-      container.appendChild(box);
-    }
+const chatContainer = document.getElementById("coze-chat-container");
 
-    function initializeCoze() {
-      const container = document.getElementById("coze-chat-container");
+function showChatMessage(title, message) {
+  chatContainer.replaceChildren();
 
-      if (!container) {
-        console.error("Coze container element is missing.");
-        return;
+  const box = document.createElement("div");
+  box.className = "chat-message";
+
+  const heading = document.createElement("strong");
+  heading.textContent = title;
+
+  const description = document.createElement("p");
+  description.textContent = message;
+
+  box.append(heading, description);
+  chatContainer.appendChild(box);
+}
+
+function initializeCoze() {
+  if (!window.CozeWebSDK ||
+      typeof window.CozeWebSDK.WebChatClient !== "function") {
+    showChatMessage(
+      "Coze SDK did not load",
+      "Check your internet connection and the SDK request in the browser Network tab."
+    );
+    console.error("CozeWebSDK.WebChatClient is unavailable.");
+    return;
+  }
+
+  if (!COZE_TOKEN ||
+      COZE_TOKEN === pat_p0hPDgcEpX1gB3b9gkOwfDfLtfdi0AuTvQdyQ6hlbC2VAu8pX6HSLpLCZ197yNGK") {
+    showChatMessage(
+      "Token required",
+      "Add your new working Coze token to the COZE_TOKEN setting in this file."
+    );
+    console.error("Coze token has not been configured.");
+    return;
+  }
+
+  try {
+    chatContainer.replaceChildren();
+
+    /*
+      Important:
+      - Pass the actual DOM element to ui.chatBot.el.
+      - Keep isNeed false to prevent a separate floating button.
+      - Use the SDK version matching this configuration.
+    */
+    window.cozeClient = new CozeWebSDK.WebChatClient({
+      config: {
+        bot_id: BOT_ID
+      },
+
+      auth: {
+        type: "token",
+        token: COZE_TOKEN,
+        onRefreshToken: async function () {
+          return COZE_TOKEN;
+        }
+      },
+
+      componentProps: {
+        title: "Science AI Agent"
+      },
+
+      ui: {
+        base: {
+          layout: "pc",
+          lang: "en",
+          zIndex: 1000
+        },
+
+        asstBtn: {
+          isNeed: false
+        },
+
+        header: {
+          isShow: true,
+          isNeedClose: false
+        },
+
+        chatBot: {
+          el: chatContainer,
+          title: "Science AI Agent",
+          width: 500
+        }
       }
-
-      if (!window.CozeWebSDK ||
-          typeof window.CozeWebSDK.WebChatClient !== "function") {
-        showChatError(
-          "Coze SDK failed to load",
-          "Check your internet connection and the SDK script request in your browser's Network tab."
-        );
-        console.error("CozeWebSDK.WebChatClient is unavailable.");
-        return;
-      }
-
-      if (!COZE_TOKEN ||
-          COZE_TOKEN === "pat_p0hPDgcEpX1gB3b9gkOwfDfLtfdi0AuTvQdyQ6hlbC2VAu8pX6HSLpLCZ197yNGK") {
-        showChatError(
-          "Coze token is missing",
-          "Add your new working token to the COZE_TOKEN setting in this file."
-        );
-        return;
-      }
-
-      try {
-        container.innerHTML = "";
-
-        window.cozeClient = new CozeWebSDK.WebChatClient({
-          config: {
-            bot_id: BOT_ID
-          },
-
-          componentProps: {
-            title: "Science AI Agent"
-          },
-
-          auth: {
-            type: "token",
-            token: COZE_TOKEN,
-            onRefreshToken: async function () {
-              return COZE_TOKEN;
-            }
-          },
-
-          ui: {
-            base: {
-              layout: "pc",
-              lang: "en",
-              zIndex: 1000
-            },
-
-            header: {
-              isShow: true,
-              isNeedClose: false
-            },
-
-            asstBtn: {
-              isNeed: false
-            },
-
-            chatBot: {
-              el: container,
-              title: "Science AI Agent",
-              width: 500
-            }
-          }
-        });
-
-        console.log("Coze WebChatClient created.");
-      } catch (error) {
-        console.error("Coze initialization failed:", error);
-
-        showChatError(
-          "Unable to initialize Coze",
-          "Open Inspect → Console to see the exact error."
-        );
-      }
-    }
-
-    // Run after the page and external SDK have loaded.
-    window.addEventListener("load", initializeCoze);
-
-
-    // ----------------------------------------------------
-    // 2. SIMPLE USAGE COUNTER
-    // ----------------------------------------------------
-
-    // This counts page loads in this browser only.
-    // It is not a shared count across all website visitors.
-    const COUNTER_KEY = "science_olympiad_site_uses";
-
-    try {
-      const currentCount = Number(localStorage.getItem(COUNTER_KEY) || 0);
-      const nextCount = currentCount + 1;
-
-      localStorage.setItem(COUNTER_KEY, String(nextCount));
-
-      document.getElementById("use-count").textContent =
-        nextCount.toLocaleString();
-    } catch (error) {
-      console.warn("Local counter unavailable:", error);
-    }
-
-
-    // ----------------------------------------------------
-    // 3. COLLAPSIBLE SECTIONS
-    // ----------------------------------------------------
-
-    document.querySelectorAll(".toggle").forEach(button => {
-      button.addEventListener("click", () => {
-        const expanded =
-          button.getAttribute("aria-expanded") === "true";
-
-        button.setAttribute("aria-expanded", String(!expanded));
-
-        button.nextElementSibling.classList.toggle(
-          "collapsed",
-          expanded
-        );
-      });
     });
 
+    console.log("Coze WebChatClient initialized.");
+  } catch (error) {
+    console.error("Coze initialization error:", error);
+    showChatMessage(
+      "Chat initialization failed",
+      "Open your browser Console to inspect the error."
+    );
+  }
+}
 
-    // ----------------------------------------------------
-    // 4. SCIENTIFIC ARTICLES
-    // ----------------------------------------------------
+/* Wait for the external SDK to finish loading. */
+if (document.readyState === "complete") {
+  initializeCoze();
+} else {
+  window.addEventListener("load", initializeCoze, { once: true });
+}
 
-    const ARTICLES = [
-      {
-        id: "remote-sensing",
-        source: "NASA SCIENCE",
-        title: "Remote Sensing",
-        description: "How satellites observe Earth without direct contact.",
-        tag: "Remote Sensing",
-        url: "https://science.nasa.gov/earth/earth-observatory/"
-      },
-      {
-        id: "solar-system",
-        source: "NASA SCIENCE",
-        title: "Solar System Exploration",
-        description: "Explore planets, moons, asteroids, and comets.",
-        tag: "Astronomy",
-        url: "https://science.nasa.gov/solar-system/"
-      },
-      {
-        id: "climate",
-        source: "NASA SCIENCE",
-        title: "Global Climate Change",
-        description: "Evidence and observations about Earth's changing climate.",
-        tag: "Earth Science",
-        url: "https://science.nasa.gov/climate-change/"
-      },
-      {
-        id: "weather",
-        source: "NOAA",
-        title: "Weather and Atmosphere",
-        description: "Learn about weather systems, forecasting, and the atmosphere.",
-        tag: "Meteorology",
-        url: "https://www.noaa.gov/education/resource-collections/weather-atmosphere"
-      },
-      {
-        id: "minerals",
-        source: "USGS",
-        title: "Minerals and Earth Materials",
-        description: "Explore mineral properties, identification, and geology.",
-        tag: "Rocks & Minerals",
-        url: "https://www.usgs.gov/"
-      },
-      {
-        id: "epidemiology",
-        source: "CDC",
-        title: "Field Epidemiology",
-        description: "How epidemiologists investigate diseases and outbreaks.",
-        tag: "Disease Detectives",
-        url: "https://www.cdc.gov/field-epidemiology/"
-      },
-      {
-        id: "ocean",
-        source: "NOAA",
-        title: "Ocean and Coastal Science",
-        description: "Explore oceans, marine ecosystems, and water science.",
-        tag: "Water Quality",
-        url: "https://www.noaa.gov/education/resource-collections/ocean-coasts"
-      },
-      {
-        id: "earth-observatory",
-        source: "NASA",
-        title: "NASA Earth Observatory",
-        description: "Images and stories about Earth's environment and systems.",
-        tag: "Remote Sensing",
-        url: "https://earthobservatory.nasa.gov/"
-      },
-      {
-        id: "biodiversity",
-        source: "NASA SCIENCE",
-        title: "Earth and Biodiversity",
-        description: "Explore ecosystems and the science of life on Earth.",
-        tag: "Biology",
-        url: "https://science.nasa.gov/earth/"
-      },
-      {
-        id: "space-weather",
-        source: "NASA SCIENCE",
-        title: "The Sun and Space Weather",
-        description: "Learn how solar activity affects Earth and space.",
-        tag: "Astronomy",
-        url: "https://science.nasa.gov/sun/"
+
+/* ======================================================
+   SIMPLE LOCAL USAGE COUNTER
+   Counts visits in this browser, not all website visitors.
+   ====================================================== */
+
+try {
+  const counterKey = "science_olympiad_site_uses";
+  const previous = Number(localStorage.getItem(counterKey) || 0);
+  const next = previous + 1;
+
+  localStorage.setItem(counterKey, String(next));
+  document.getElementById("use-count").textContent =
+    next.toLocaleString();
+} catch (error) {
+  console.warn("Local usage counter is unavailable:", error);
+}
+
+
+/* ======================================================
+   COLLAPSIBLE SIDEBAR SECTIONS
+   ====================================================== */
+
+document.querySelectorAll(".toggle").forEach(button => {
+  button.addEventListener("click", () => {
+    const expanded = button.getAttribute("aria-expanded") === "true";
+
+    button.setAttribute("aria-expanded", String(!expanded));
+    button.nextElementSibling.classList.toggle("collapsed", expanded);
+  });
+});
+
+
+/* ======================================================
+   SCIENTIFIC ARTICLES
+   Articles rotate when opened, unless starred.
+   Starred articles are saved in this browser.
+   ====================================================== */
+
+const ARTICLES = [
+  {
+    id: "remote-sensing",
+    source: "NASA SCIENCE",
+    title: "Remote Sensing",
+    description: "How satellites observe Earth without direct contact.",
+    url: "https://science.nasa.gov/earth/earth-observatory/"
+  },
+  {
+    id: "solar-system",
+    source: "NASA SCIENCE",
+    title: "Solar System Exploration",
+    description: "Explore planets, moons, asteroids, and comets.",
+    url: "https://science.nasa.gov/solar-system/"
+  },
+  {
+    id: "climate",
+    source: "NASA SCIENCE",
+    title: "Global Climate Change",
+    description: "Learn about Earth's changing climate.",
+    url: "https://science.nasa.gov/climate-change/"
+  },
+  {
+    id: "weather",
+    source: "NOAA",
+    title: "Weather and Atmosphere",
+    description: "Weather systems, forecasting, and the atmosphere.",
+    url: "https://www.noaa.gov/education/resource-collections/weather-atmosphere"
+  },
+  {
+    id: "minerals",
+    source: "USGS",
+    title: "Minerals and Earth Materials",
+    description: "Explore geology and mineral identification.",
+    url: "https://www.usgs.gov/"
+  },
+  {
+    id: "epidemiology",
+    source: "CDC",
+    title: "Field Epidemiology",
+    description: "How epidemiologists investigate disease outbreaks.",
+    url: "https://www.cdc.gov/field-epidemiology/"
+  },
+  {
+    id: "ocean",
+    source: "NOAA",
+    title: "Ocean and Coastal Science",
+    description: "Explore oceans and marine ecosystems.",
+    url: "https://www.noaa.gov/education/resource-collections/ocean-coasts"
+  },
+  {
+    id: "earth-observatory",
+    source: "NASA",
+    title: "NASA Earth Observatory",
+    description: "Images and stories about Earth's environment.",
+    url: "https://earthobservatory.nasa.gov/"
+  },
+  {
+    id: "biodiversity",
+    source: "NASA SCIENCE",
+    title: "Earth and Biodiversity",
+    description: "Explore ecosystems and life on Earth.",
+    url: "https://science.nasa.gov/earth/"
+  },
+  {
+    id: "space-weather",
+    source: "NASA SCIENCE",
+    title: "The Sun and Space Weather",
+    description: "How solar activity affects Earth and space.",
+    url: "https://science.nasa.gov/sun/"
+  }
+];
+
+const STAR_KEY = "science_olympiad_starred_articles";
+const VISIBLE_ARTICLES = 6;
+const articleList = document.getElementById("article-list");
+
+let starred = new Set();
+
+try {
+  const saved = JSON.parse(localStorage.getItem(STAR_KEY) || "[]");
+  if (Array.isArray(saved)) starred = new Set(saved);
+} catch (error) {
+  console.warn("Could not read saved article stars:", error);
+}
+
+let visibleArticles = [];
+
+function shuffle(items) {
+  const result = [...items];
+
+  for (let i = result.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [result[i], result[j]] = [result[j], result[i]];
+  }
+
+  return result;
+}
+
+function saveStars() {
+  try {
+    localStorage.setItem(STAR_KEY, JSON.stringify([...starred]));
+  } catch (error) {
+    console.warn("Could not save article stars:", error);
+  }
+}
+
+function selectInitialArticles() {
+  const pinned = ARTICLES.filter(article => starred.has(article.id));
+  const remaining = shuffle(
+    ARTICLES.filter(article => !starred.has(article.id))
+  );
+
+  visibleArticles = [...pinned, ...remaining].slice(0, VISIBLE_ARTICLES);
+}
+
+function rotateArticle(id) {
+  const index = visibleArticles.findIndex(article => article.id === id);
+
+  if (index < 0 || starred.has(id)) return;
+
+  const visibleIds = new Set(visibleArticles.map(article => article.id));
+
+  const alternatives = shuffle(
+    ARTICLES.filter(article =>
+      !visibleIds.has(article.id) && !starred.has(article.id)
+    )
+  );
+
+  if (!alternatives.length) return;
+
+  visibleArticles[index] = alternatives[0];
+  renderArticles();
+}
+
+function renderArticles() {
+  articleList.replaceChildren();
+
+  visibleArticles.forEach(article => {
+    const card = document.createElement("article");
+    card.className = "article-card";
+
+    if (starred.has(article.id)) card.classList.add("starred");
+
+    const source = document.createElement("div");
+    source.className = "article-source";
+    source.textContent = article.source;
+
+    const title = document.createElement("h3");
+    title.textContent = article.title;
+
+    const description = document.createElement("p");
+    description.textContent = article.description;
+
+    const link = document.createElement("a");
+    link.href = article.url;
+    link.target = "_blank";
+    link.rel = "noopener noreferrer";
+    link.textContent = "Read article ↗";
+
+    const starButton = document.createElement("button");
+    starButton.type = "button";
+    starButton.className = "star-button";
+    starButton.textContent = starred.has(article.id) ? "★" : "☆";
+    starButton.classList.toggle("active", starred.has(article.id));
+    starButton.setAttribute(
+      "aria-label",
+      starred.has(article.id) ? "Unstar article" : "Star article"
+    );
+
+    starButton.addEventListener("click", () => {
+      if (starred.has(article.id)) {
+        starred.delete(article.id);
+      } else {
+        starred.add(article.id);
       }
-    ];
 
-    const STAR_KEY = "science_olympiad_starred_articles";
-    const VISIBLE_ARTICLES = 6;
-    const articleList = document.getElementById("article-list");
+      saveStars();
+      renderArticles();
+    });
 
-    let starred = new Set();
-
-    try {
-      const saved = JSON.parse(localStorage.getItem(STAR_KEY) || "[]");
-      if (Array.isArray(saved)) starred = new Set(saved);
-    } catch (error) {
-      console.warn("Could not load saved stars:", error);
-    }
-
-    let visibleArticles = [];
-
-    function saveStars() {
-      try {
-        localStorage.setItem(STAR_KEY, JSON.stringify([...starred]));
-      } catch (error) {
-        console.warn("Could not save article stars:", error);
+    link.addEventListener("click", () => {
+      if (!starred.has(article.id)) {
+        window.setTimeout(() => rotateArticle(article.id), 300);
       }
-    }
+    });
 
-    function shuffled(items) {
-      const result = [...items];
+    card.append(source, title, description, link, starButton);
+    articleList.appendChild(card);
+  });
+}
 
-      for (let i = result.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [result[i], result[j]] = [result[j], result[i]];
-      }
+selectInitialArticles();
+renderArticles();
 
-      return result;
-    }
 
-    function chooseInitialArticles() {
-      const pinned = ARTICLES.filter(article => starred.has(article.id));
-      const remaining = shuffled(
-        ARTICLES.filter(article => !starred.has(article.id))
-      );
+/* ======================================================
+   SCIENCE OLYMPIAD DIVISION B EVENTS
+   Starter list only: confirm the official 2027 slate.
+   ====================================================== */
 
-      visibleArticles = [...pinned, ...remaining]
-        .slice(0, VISIBLE_ARTICLES);
-    }
+const EVENT_CATEGORIES = {
+  "Hybrid": [
+    "Experimental Design",
+    "Write It Do It",
+    "Crime Busters",
+    "Food Science",
+    "Water Quality"
+  ],
 
-    function renderArticles() {
-      articleList.innerHTML = "";
+  "Build": [
+    "Boomilever",
+    "Scrambler",
+    "Roller Coaster",
+    "Hovercraft",
+    "Elastic Launched Gliders"
+  ],
 
-      visibleArticles.forEach(article => {
-        const card = document.createElement("article");
-        card.className = "article-card";
+  "Core Knowledge": [
+    "Anatomy and Physiology",
+    "Botany",
+    "Codebusters",
+    "Disease Detectives",
+    "Dynamic Planet",
+    "Heredity",
+    "Meteorology",
+    "Remote Sensing",
+    "Rocks and Minerals",
+    "Solar System"
+  ]
+};
 
-        if (starred.has(article.id)) card.classList.add("starred");
+const eventList = document.getElementById("event-list");
 
-        const source = document.createElement("div");
-        source.className = "article-source";
-        source.textContent = article.source;
+function getSeasonYear() {
+  const now = new Date();
+  return now.getMonth() >= 6
+    ? now.getFullYear() + 1
+    : now.getFullYear();
+}
 
-        const title = document.createElement("h3");
-        title.textContent = article.title;
+function renderEvents() {
+  eventList.replaceChildren();
 
-        const description = document.createElement("p");
-        description.textContent = article.description;
+  const season = getSeasonYear();
 
-        const link = document.createElement("a");
-        link.href = article.url;
-        link.target = "_blank";
-        link.rel = "noopener noreferrer";
-        link.textContent = "Read article ↗";
+  const seasonHeading = document.createElement("p");
+  seasonHeading.className = "event-heading";
+  seasonHeading.textContent = season + " · Division B";
+  eventList.appendChild(seasonHeading);
 
-        const starButton = document.createElement("button");
-        starButton.type = "button";
-        starButton.className = "star-button";
-        starButton.textContent = starred.has(article.id) ? "★" : "☆";
-        starButton.setAttribute(
-          "aria-label",
-          starred.has(article.id) ? "Unstar article" : "Star article"
-        );
+  Object.entries(EVENT_CATEGORIES).forEach(([category, events]) => {
+    const group = document.createElement("section");
+    group.className = "event-group";
 
-        if (starred.has(article.id)) starButton.classList.add("active");
+    const heading = document.createElement("h3");
+    heading.className = "event-heading";
+    heading.textContent = category;
+    group.appendChild(heading);
 
-        starButton.addEventListener("click", () => {
-          if (starred.has(article.id)) {
-            starred.delete(article.id);
-          } else {
-            starred.add(article.id);
-          }
+    events.forEach(eventName => {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "event-button";
+      button.textContent = eventName;
 
-          saveStars();
-          renderArticles();
-        });
+      button.addEventListener("click", async () => {
+        const prompt =
+          "Help me study for Science Olympiad Division B, " +
+          season + " season. My event is " + eventName +
+          ", categorized as " + category +
+          ". Explain the key concepts, suggest a study plan, " +
+          "and quiz me with practice questions.";
 
-        link.addEventListener("click", () => {
-          // Rotate the opened article after it opens in a new tab.
-          // Starred articles stay in the list.
-          if (starred.has(article.id)) return;
+        try {
+          await navigator.clipboard.writeText(prompt);
+          button.textContent = "Prompt copied!";
 
           window.setTimeout(() => {
-            rotateArticle(article.id);
-          }, 250);
-        });
-
-        card.append(source, title, description, link, starButton);
-        articleList.appendChild(card);
-      });
-    }
-
-    function rotateArticle(openedId) {
-      const index = visibleArticles.findIndex(
-        article => article.id === openedId
-      );
-
-      if (index === -1 || starred.has(openedId)) return;
-
-      const visibleIds = new Set(
-        visibleArticles.map(article => article.id)
-      );
-
-      const candidates = shuffled(
-        ARTICLES.filter(article =>
-          !visibleIds.has(article.id) &&
-          !starred.has(article.id)
-        )
-      );
-
-      if (candidates.length === 0) return;
-
-      visibleArticles[index] = candidates[0];
-      renderArticles();
-    }
-
-    chooseInitialArticles();
-    renderArticles();
-
-
-    // ----------------------------------------------------
-    // 5. SCIENCE OLYMPIAD EVENTS
-    // ----------------------------------------------------
-
-    // Starter list for Division B.
-    // Event slates can change each season. Verify the official
-    // 2027 rules before treating this as the final event list.
-    const EVENT_CATEGORIES = {
-      "Hybrid": [
-        "Experimental Design",
-        "Write It Do It",
-        "Crime Busters",
-        "Food Science",
-        "Water Quality"
-      ],
-
-      "Build": [
-        "Boomilever",
-        "Scrambler",
-        "Roller Coaster",
-        "Hovercraft",
-        "Elastic Launched Gliders"
-      ],
-
-      "Core Knowledge": [
-        "Anatomy and Physiology",
-        "Botany",
-        "Codebusters",
-        "Disease Detectives",
-        "Dynamic Planet",
-        "Heredity",
-        "Meteorology",
-        "Remote Sensing",
-        "Rocks and Minerals",
-        "Solar System"
-      ]
-    };
-
-    const eventList = document.getElementById("event-list");
-
-    function currentSeasonYear() {
-      const now = new Date();
-      return now.getMonth() >= 6
-        ? now.getFullYear() + 1
-        : now.getFullYear();
-    }
-
-    function renderEvents() {
-      eventList.innerHTML = "";
-
-      const season = currentSeasonYear();
-
-      const seasonHeading = document.createElement("p");
-      seasonHeading.className = "event-heading";
-      seasonHeading.textContent = season + " • Division B";
-      eventList.appendChild(seasonHeading);
-
-      Object.entries(EVENT_CATEGORIES).forEach(([category, events]) => {
-        const group = document.createElement("section");
-        group.className = "event-group";
-
-        const heading = document.createElement("h3");
-        heading.className = "event-heading";
-        heading.textContent = category;
-
-        group.appendChild(heading);
-
-        events.forEach(eventName => {
-          const button = document.createElement("button");
-          button.type = "button";
-          button.className = "event-button";
-          button.textContent = eventName;
-
-          button.addEventListener("click", () => {
-            const prompt =
-              "Help me study for Science Olympiad Division B, " +
-              season + " season. My event is " + eventName +
-              ", categorized as " + category +
-              ". Explain key concepts, suggest a study plan, " +
-              "and quiz me with practice questions.";
-
-            // Copy the prompt so the user can paste it into Coze.
-            // Browser clipboard access may require HTTPS.
-            if (navigator.clipboard &&
-                navigator.clipboard.writeText) {
-              navigator.clipboard.writeText(prompt)
-                .then(() => {
-                  button.textContent = "Prompt copied! " + eventName;
-                  window.setTimeout(() => {
-                    button.textContent = eventName;
-                  }, 1600);
-                })
-                .catch(() => {
-                  window.prompt("Copy this study prompt:", prompt);
-                });
-            } else {
-              window.prompt("Copy this study prompt:", prompt);
-            }
-          });
-
-          group.appendChild(button);
-        });
-
-        eventList.appendChild(group);
+            button.textContent = eventName;
+          }, 1500);
+        } catch (error) {
+          window.prompt("Copy this study prompt:", prompt);
+        }
       });
 
-      const note = document.createElement("p");
-      note.className = "event-note";
-      note.textContent =
-        "Event categories and names are a starter list, not a verified official 2027 slate.";
+      group.appendChild(button);
+    });
 
-      eventList.appendChild(note);
-    }
+    eventList.appendChild(group);
+  });
 
-    renderEvents();
+  const note = document.createElement("p");
+  note.className = "event-note";
+  note.textContent =
+    "Sample event list. Names and categories may differ from the official season rules.";
+  eventList.appendChild(note);
+}
 
-  </script>
+renderEvents();
+
+</script>
 </body>
 </html>
