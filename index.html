@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -278,7 +277,6 @@ h1 {
   font-size: 11px;
 }
 
-/* Coze's embedded chat goes inside this element. */
 #coze-chat-container {
   position: relative;
   flex: 1;
@@ -290,7 +288,9 @@ h1 {
 }
 
 #coze-chat-container iframe {
-  max-width: 100%;
+  width: 100% !important;
+  height: 100% !important;
+  border: none !important;
 }
 
 .chat-message {
@@ -385,7 +385,7 @@ h1 {
         a study prompt that you can copy into the AI assistant.
         <br><br>
         Check official Science Olympiad rules for the current season.
-        The sample events below are not a verified 2027 event slate.
+        The sample events below are not a verified event slate.
       </section>
 
     </aside>
@@ -394,7 +394,7 @@ h1 {
       <header class="agent-header">
         <div class="agent-title">
           <span class="status-dot"></span>
-          <span>Science AI Agent</span>
+          <span>SciOly Sage</span>
         </div>
         <span class="agent-status">Powered by Coze</span>
       </header>
@@ -402,35 +402,27 @@ h1 {
       <div id="coze-chat-container">
         <div class="chat-message">
           <strong>Loading your AI assistant…</strong>
-          Connecting to Coze. Please wait.
+          Connecting to SciOly Sage. Please wait.
         </div>
       </div>
     </section>
   </div>
 </main>
 
-<!-- Coze Chat SDK: international/oversea build -->
-<script
-  src="https://sf-cdn.coze.com/obj/unpkg-va/flow-platform/chat-app-sdk/1.2.0-beta.20/libs/oversea/index.js">
-</script>
+<!-- Official Coze Web SDK (v1.2.0-beta.6) -->
+<script src="https://sf-cdn.coze.com/obj/unpkg-va/flow-platform/chat-app-sdk/1.2.0-beta.6/libs/oversea/index.js"></script>
 
 <script>
 "use strict";
 
 /* ======================================================
-   COZE AI AGENT
+   COZE AI AGENT CONFIGURATION
    ====================================================== */
 
 const BOT_ID = "7689854988897550389";
 
-/*
-  Enter your NEW token here to test.
-
-  WARNING: A token in public HTML can be read by visitors.
-  For a public website, move token handling to a secure backend
-  before publishing.
-*/
-const COZE_TOKEN = "PASTE_YOUR_NEW_TOKEN_HERE";
+// Replace 'pat_********' with your full Personal Access Token from Coze
+const COZE_TOKEN = "pat_ts63u7r074QXIMtSClpF5GSMKB6vfTvt8HAAn1rtt7ChH4I2emhzbAhXECHwEd5F";
 
 const chatContainer = document.getElementById("coze-chat-container");
 
@@ -451,77 +443,53 @@ function showChatMessage(title, message) {
 }
 
 function initializeCoze() {
-  if (!window.CozeWebSDK ||
-      typeof window.CozeWebSDK.WebChatClient !== "function") {
+  if (!window.CozeWebSDK || typeof window.CozeWebSDK.WebChatClient !== "function") {
     showChatMessage(
       "Coze SDK did not load",
-      "Check your internet connection and the SDK request in the browser Network tab."
+      "Check your network connection or ensure no script blocker is active."
     );
-    console.error("CozeWebSDK.WebChatClient is unavailable.");
-    return;
-  }
-
-  if (!COZE_TOKEN ||
-      COZE_TOKEN === pat_p0hPDgcEpX1gB3b9gkOwfDfLtfdi0AuTvQdyQ6hlbC2VAu8pX6HSLpLCZ197yNGK") {
-    showChatMessage(
-      "Token required",
-      "Add your new working Coze token to the COZE_TOKEN setting in this file."
-    );
-    console.error("Coze token has not been configured.");
+    console.error("CozeWebSDK.WebChatClient unavailable.");
     return;
   }
 
   try {
     chatContainer.replaceChildren();
 
-    /*
-      Important:
-      - Pass the actual DOM element to ui.chatBot.el.
-      - Keep isNeed false to prevent a separate floating button.
-      - Use the SDK version matching this configuration.
-    */
     window.cozeClient = new CozeWebSDK.WebChatClient({
       config: {
-        bot_id: BOT_ID
+        bot_id: BOT_ID,
       },
-
+      componentProps: {
+        title: "SciOly Sage",
+      },
       auth: {
         type: "token",
         token: COZE_TOKEN,
-        onRefreshToken: async function () {
+        onRefreshToken: function () {
           return COZE_TOKEN;
         }
       },
-
-      componentProps: {
-        title: "Science AI Agent"
-      },
-
       ui: {
         base: {
           layout: "pc",
           lang: "en",
           zIndex: 1000
         },
-
         asstBtn: {
           isNeed: false
         },
-
         header: {
-          isShow: true,
-          isNeedClose: false
+          isShow: false
         },
-
         chatBot: {
           el: chatContainer,
-          title: "Science AI Agent",
-          width: 500
+          title: "SciOly Sage",
+          width: 850
         }
       }
     });
 
-    console.log("Coze WebChatClient initialized.");
+    console.log("Coze WebChatClient initialized successfully.");
   } catch (error) {
     console.error("Coze initialization error:", error);
     showChatMessage(
@@ -531,17 +499,14 @@ function initializeCoze() {
   }
 }
 
-/* Wait for the external SDK to finish loading. */
 if (document.readyState === "complete") {
   initializeCoze();
 } else {
   window.addEventListener("load", initializeCoze, { once: true });
 }
 
-
 /* ======================================================
-   SIMPLE LOCAL USAGE COUNTER
-   Counts visits in this browser, not all website visitors.
+   LOCAL USAGE COUNTER
    ====================================================== */
 
 try {
@@ -550,12 +515,10 @@ try {
   const next = previous + 1;
 
   localStorage.setItem(counterKey, String(next));
-  document.getElementById("use-count").textContent =
-    next.toLocaleString();
+  document.getElementById("use-count").textContent = next.toLocaleString();
 } catch (error) {
   console.warn("Local usage counter is unavailable:", error);
 }
-
 
 /* ======================================================
    COLLAPSIBLE SIDEBAR SECTIONS
@@ -564,17 +527,13 @@ try {
 document.querySelectorAll(".toggle").forEach(button => {
   button.addEventListener("click", () => {
     const expanded = button.getAttribute("aria-expanded") === "true";
-
     button.setAttribute("aria-expanded", String(!expanded));
     button.nextElementSibling.classList.toggle("collapsed", expanded);
   });
 });
 
-
 /* ======================================================
    SCIENTIFIC ARTICLES
-   Articles rotate when opened, unless starred.
-   Starred articles are saved in this browser.
    ====================================================== */
 
 const ARTICLES = [
@@ -667,12 +626,10 @@ let visibleArticles = [];
 
 function shuffle(items) {
   const result = [...items];
-
   for (let i = result.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [result[i], result[j]] = [result[j], result[i]];
   }
-
   return result;
 }
 
@@ -686,198 +643,4 @@ function saveStars() {
 
 function selectInitialArticles() {
   const pinned = ARTICLES.filter(article => starred.has(article.id));
-  const remaining = shuffle(
-    ARTICLES.filter(article => !starred.has(article.id))
-  );
-
-  visibleArticles = [...pinned, ...remaining].slice(0, VISIBLE_ARTICLES);
-}
-
-function rotateArticle(id) {
-  const index = visibleArticles.findIndex(article => article.id === id);
-
-  if (index < 0 || starred.has(id)) return;
-
-  const visibleIds = new Set(visibleArticles.map(article => article.id));
-
-  const alternatives = shuffle(
-    ARTICLES.filter(article =>
-      !visibleIds.has(article.id) && !starred.has(article.id)
-    )
-  );
-
-  if (!alternatives.length) return;
-
-  visibleArticles[index] = alternatives[0];
-  renderArticles();
-}
-
-function renderArticles() {
-  articleList.replaceChildren();
-
-  visibleArticles.forEach(article => {
-    const card = document.createElement("article");
-    card.className = "article-card";
-
-    if (starred.has(article.id)) card.classList.add("starred");
-
-    const source = document.createElement("div");
-    source.className = "article-source";
-    source.textContent = article.source;
-
-    const title = document.createElement("h3");
-    title.textContent = article.title;
-
-    const description = document.createElement("p");
-    description.textContent = article.description;
-
-    const link = document.createElement("a");
-    link.href = article.url;
-    link.target = "_blank";
-    link.rel = "noopener noreferrer";
-    link.textContent = "Read article ↗";
-
-    const starButton = document.createElement("button");
-    starButton.type = "button";
-    starButton.className = "star-button";
-    starButton.textContent = starred.has(article.id) ? "★" : "☆";
-    starButton.classList.toggle("active", starred.has(article.id));
-    starButton.setAttribute(
-      "aria-label",
-      starred.has(article.id) ? "Unstar article" : "Star article"
-    );
-
-    starButton.addEventListener("click", () => {
-      if (starred.has(article.id)) {
-        starred.delete(article.id);
-      } else {
-        starred.add(article.id);
-      }
-
-      saveStars();
-      renderArticles();
-    });
-
-    link.addEventListener("click", () => {
-      if (!starred.has(article.id)) {
-        window.setTimeout(() => rotateArticle(article.id), 300);
-      }
-    });
-
-    card.append(source, title, description, link, starButton);
-    articleList.appendChild(card);
-  });
-}
-
-selectInitialArticles();
-renderArticles();
-
-
-/* ======================================================
-   SCIENCE OLYMPIAD DIVISION B EVENTS
-   Starter list only: confirm the official 2027 slate.
-   ====================================================== */
-
-const EVENT_CATEGORIES = {
-  "Hybrid": [
-    "Experimental Design",
-    "Write It Do It",
-    "Crime Busters",
-    "Food Science",
-    "Water Quality"
-  ],
-
-  "Build": [
-    "Boomilever",
-    "Scrambler",
-    "Roller Coaster",
-    "Hovercraft",
-    "Elastic Launched Gliders"
-  ],
-
-  "Core Knowledge": [
-    "Anatomy and Physiology",
-    "Botany",
-    "Codebusters",
-    "Disease Detectives",
-    "Dynamic Planet",
-    "Heredity",
-    "Meteorology",
-    "Remote Sensing",
-    "Rocks and Minerals",
-    "Solar System"
-  ]
-};
-
-const eventList = document.getElementById("event-list");
-
-function getSeasonYear() {
-  const now = new Date();
-  return now.getMonth() >= 6
-    ? now.getFullYear() + 1
-    : now.getFullYear();
-}
-
-function renderEvents() {
-  eventList.replaceChildren();
-
-  const season = getSeasonYear();
-
-  const seasonHeading = document.createElement("p");
-  seasonHeading.className = "event-heading";
-  seasonHeading.textContent = season + " · Division B";
-  eventList.appendChild(seasonHeading);
-
-  Object.entries(EVENT_CATEGORIES).forEach(([category, events]) => {
-    const group = document.createElement("section");
-    group.className = "event-group";
-
-    const heading = document.createElement("h3");
-    heading.className = "event-heading";
-    heading.textContent = category;
-    group.appendChild(heading);
-
-    events.forEach(eventName => {
-      const button = document.createElement("button");
-      button.type = "button";
-      button.className = "event-button";
-      button.textContent = eventName;
-
-      button.addEventListener("click", async () => {
-        const prompt =
-          "Help me study for Science Olympiad Division B, " +
-          season + " season. My event is " + eventName +
-          ", categorized as " + category +
-          ". Explain the key concepts, suggest a study plan, " +
-          "and quiz me with practice questions.";
-
-        try {
-          await navigator.clipboard.writeText(prompt);
-          button.textContent = "Prompt copied!";
-
-          window.setTimeout(() => {
-            button.textContent = eventName;
-          }, 1500);
-        } catch (error) {
-          window.prompt("Copy this study prompt:", prompt);
-        }
-      });
-
-      group.appendChild(button);
-    });
-
-    eventList.appendChild(group);
-  });
-
-  const note = document.createElement("p");
-  note.className = "event-note";
-  note.textContent =
-    "Sample event list. Names and categories may differ from the official season rules.";
-  eventList.appendChild(note);
-}
-
-renderEvents();
-
-</script>
-</body>
-</html>
+  const remaining =
