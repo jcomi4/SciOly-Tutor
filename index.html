@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Science Olympiad AI Lab v2</title>
+<title>Science Olympiad AI Lab</title>
 
 <style>
 :root {
@@ -422,7 +422,7 @@ h1 {
 const BOT_ID = "7689854988897550389";
 
 // IMPORTANT: Insert your generated token here before uploading to GitHub.
-const COZE_TOKEN = "pat_lSGnobDUTDIcAZZKRazxADl2UKjvRf9NBkP6J7b5W7JWmMcUPKDUSNs4kKwZOosL";
+const COZE_TOKEN = "pat_56OmYk0mBo0I8Tht9IUESd3jHPVsCHsVBTBLwZbZzdNFjxS7ePVZtXGsD28z8S7X";
 
 const chatContainer = document.getElementById("coze-chat-container");
 
@@ -453,14 +453,16 @@ function initializeCoze() {
   }
 
   try {
-    chatContainer.replaceChildren();
+    // Clear the loading text and let the user know where to look
+    showChatMessage(
+      "Chat Ready", 
+      "Click the floating chat bubble in the bottom right corner of your screen to start."
+    );
 
+    // Initialize bare-minimum Coze settings (removes custom UI formatting)
     window.cozeClient = new CozeWebSDK.WebChatClient({
       config: {
         bot_id: BOT_ID,
-      },
-      componentProps: {
-        title: "SciOly Sage",
       },
       auth: {
         type: "token",
@@ -468,28 +470,8 @@ function initializeCoze() {
         onRefreshToken: function () {
           return COZE_TOKEN;
         }
-      },
-      ui: {
-        base: {
-          layout: "mobile", 
-          lang: "en",
-          zIndex: 1000
-        },
-        asstBtn: {
-          isNeed: false 
-        },
-        header: {
-          isShow: false 
-        },
-        chatBot: {
-          el: chatContainer,
-          title: "SciOly Sage"
-        }
       }
     });
-
-    // CRITICAL FIX: Force the chat window to open since the floating button is hidden
-    window.cozeClient.showChatBot();
 
     console.log("Coze WebChatClient initialized successfully.");
   } catch (error) {
