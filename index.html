@@ -19,7 +19,6 @@
 
 * { box-sizing: border-box; }
 
-
 body {
   margin: 0;
   background: var(--bg);
@@ -342,7 +341,7 @@ h1 {
 
   <header class="science-header">
     <p class="kicker">SCIENCE LAB · AI ASSISTANT</p>
-    <h1>Explore. Engage. Ask. Discover.</h1>
+    <h1>Explore. Ask. Discover.</h1>
     <p class="subtitle">
       Your Science Olympiad study space. Explore scientific research,
       browse events, and ask your AI assistant questions.
@@ -422,8 +421,7 @@ h1 {
 
 const BOT_ID = "7689854988897550389";
 
-// IMPORTANT: Insert your newly generated token here. 
-// DO NOT reuse the old one, as it was exposed in your previous code.
+// IMPORTANT: Insert your generated token here before uploading to GitHub.
 const COZE_TOKEN = "pat_lSGnobDUTDIcAZZKRazxADl2UKjvRf9NBkP6J7b5W7JWmMcUPKDUSNs4kKwZOosL";
 
 const chatContainer = document.getElementById("coze-chat-container");
@@ -473,23 +471,25 @@ function initializeCoze() {
       },
       ui: {
         base: {
-          layout: "pc",
+          layout: "mobile", 
           lang: "en",
           zIndex: 1000
         },
         asstBtn: {
-          isNeed: false
+          isNeed: false 
         },
         header: {
-          isShow: false
+          isShow: false 
         },
         chatBot: {
           el: chatContainer,
-          title: "SciOly Sage",
-          width: 850
+          title: "SciOly Sage"
         }
       }
     });
+
+    // CRITICAL FIX: Force the chat window to open since the floating button is hidden
+    window.cozeClient.showChatBot();
 
     console.log("Coze WebChatClient initialized successfully.");
   } catch (error) {
